@@ -1,4 +1,4 @@
-name: Deploy Infrastructure in Azure
+name: az login
 
 on: workflow_dispatch
 
