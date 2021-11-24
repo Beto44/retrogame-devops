@@ -1,20 +1,40 @@
-# File: .github/workflows/workflow.yml
+name: Deploy Infrastructure in Azure
 
-on: [push]
-
-name: AzureLoginWithNoSubscriptions
+on: workflow_dispatch
 
 jobs:
-  build-and-deploy:
+
+  Terraform:
+
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./terraform/infrastructure
+    env:
+      ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
+      ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
+      ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
+
     steps:
-      - name: Sample Azure action
-        with: # Set Azure credentials secret as an input
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
-        env: # Or as an environment variable
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
-      - run: |
-          az webapp list --query "[?state=='Running']"
+      - uses: actions/checkout@v2
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
 
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Format
+        run: terraform fmt
+        
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -lock=false
+        
+      - name: Terraform Apply
+        run: terraform apply --auto-approve -lock=false
 
