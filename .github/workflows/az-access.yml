@@ -1,23 +1,18 @@
-on: [push]
+name: Azure login
 
-name: Azure Login
+on:
+
+  push:
+    branches: [ "main" ]
 
 jobs:
 
-  build-and-deploy:
+  Terraform:
     runs-on: ubuntu-latest
-    steps:
-    - uses: azure/login@v1
-      with:
-        credentials: ${{ secrets.AZURE_CREDENTIALS }}
-      env: # Or as an environment variable
-        credentials: ${{ secrets.AZURE_CREDENTIALS }}
-      
-    - run: |
-          sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
-          curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-          AZ_REPO=$(lsb_release -cs)
-          echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-          sudo apt-get update
-          sudo apt-get install azure-cli
+
+    env:
+      ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
+      ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
+      ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
 
