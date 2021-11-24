@@ -9,8 +9,10 @@ jobs:
     steps:
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
+        credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      env: # Or as an environment variable
+        credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      
     - run: |
           sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
           curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
