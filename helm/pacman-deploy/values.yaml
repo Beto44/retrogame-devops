@@ -9,7 +9,8 @@ replicaCount: 1
 
 # APPLICATION
 image:
-  repository: containerregistrypacman.azurecr.io/pacman-app
+  #repository: containerregistrypacman.azurecr.io/pacman-app
+  repository: ortmx/pacman-nodejs-app
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
